@@ -15,6 +15,74 @@ class Tree {
 	constructor(arr) {
 		this.root = buildTree(arr, 0, arr.length - 1);
 	}
+
+	/**
+	 * Insert a value into the tree
+	 * @param {number | any} value - Value (Number) to insert
+	 */
+	insert = (value) => {
+		// Check if Tree contains `value`
+		if (this.contains(value)) return; // Dont add value twice
+
+		let node = this.root;
+		while (value > node.value) {
+			if (node.right === null) node.right = new Node(value);
+
+			else node = node.right;
+		}
+
+		while (value < node.value) {
+			if (node.left === null) node.left = new Node(value);
+
+			else node = node.left;
+		}
+	};
+
+	/**
+	 * Check if Tree contains value
+	 * @param {number | any} value - Value to check
+	 * @param {Node} check - Node to check (leave blank to run through whole tree)
+	 *
+	 * @return {boolean}
+	 */
+	contains = (value, check = this.root) => {
+		// Base Cases
+		if (check === null) return false;
+		else if (value == check.value) return true;
+
+		// Check if value is greater than or less than check
+		// Call function again with the left or right Node
+		else if (value < check.value) {
+			return this.contains(value, check.left);
+		} else if (value > check.value) {
+			return this.contains(value, check.right);
+		}
+	};
+
+	/**
+	 * Pretty Print the BTS to the console
+	 * for visualization
+	 * @author TOP
+	 * Note: Slightly edited to work in my `Tree` class
+	 *
+	 * @param {Node} node - Root Node / Current Node
+	 * @param {string} prefix
+	 * @param {boolean} isLeft - Is left?
+	 * @return {void}
+	 */
+	prettyPrint = (node = this.root, prefix = '', isLeft = true) => {
+		if (node === null) {
+			return;
+		}
+		if (node.right !== null) {
+			// eslint-disable-next-line max-len
+			this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+		}
+		console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
+		if (node.left !== null) {
+			this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+		}
+	};
 }
 
 /**
@@ -61,25 +129,11 @@ class Node {
 	}
 }
 
-// Print tree to console
-// Given by TOP
-const prettyPrint = (node, prefix = '', isLeft = true) => {
-	if (node === null) {
-		return;
-	}
-	if (node.right !== null) {
-		prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-	}
-	console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
-	if (node.left !== null) {
-		prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-	}
-};
 
 // Tests
-// Unsorted Array
-const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const sorted = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const sorted = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+	16, 17, 18, 19, 20];
 
 const tree = new Tree(sorted);
-prettyPrint(tree.root);
+tree.insert(21);
+tree.prettyPrint();
