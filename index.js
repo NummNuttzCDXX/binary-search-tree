@@ -152,6 +152,23 @@ class Tree {
 	};
 
 	/**
+	 * Find a value within Tree
+	 *
+	 * @param {number | any} value - Value to find
+	 *
+	 * @return {Node} Node with the given value
+	 */
+	find = (value) => {
+		let node = this.root;
+		while (true) {
+			if (node == null) return null;
+			else if (node.value > value) node = node.left;
+			else if (node.value < value) node = node.right;
+			else if (node.value == value) return node;
+		}
+	};
+
+	/**
 	 * Pretty Print the BTS to the console
 	 * for visualization
 	 * @author TOP
@@ -229,3 +246,6 @@ const sorted = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 const tree = new Tree(sorted);
 tree.delete(10);
 tree.prettyPrint();
+
+console.log(tree.find(20)); // --> { value: 20, left: null, right: null }
+console.log(tree.find(10)); // --> null
