@@ -172,6 +172,7 @@ class Tree {
 	 * Traverse the tree in 'level order' and place the current `Node`
 	 * as a parameter to the given callback function.
 	 * If no callback is given, return an Array of values
+	 * (iterative approach)
 	 *
 	 * @param {Function} callback - A callback function whos parameter
 	 * will be each node in the tree
@@ -204,6 +205,51 @@ class Tree {
 
 			// Set node to first Node in the queue
 			node = queue.shift();
+		}
+	};
+
+	/**
+	 * Traverse the Tree in level order and place the current `Node` as the
+	 * parameter for the given callback function, if no callback is given,
+	 * return Array of values (recursive approach)
+	 *
+	 * @param {Function} [callback] - Callback Function to which the parameter
+	 * will be the current node
+	 * - (optional)
+	 * @param {Node} node - Current Node
+	 * - Used for recursive calls
+	 * - Do not worry about it
+	 * @param {Array} queue - Queue of Nodes to record
+	 * - Used for recursive calls
+	 *
+	 * @return {void | Array} Returns array of values if no callback is given
+	 */
+	recurLevelOrder = (callback, node = this.root, queue = []) => {
+		const array = []; // Return array of values if no callback is given
+
+		// Push children to queue
+		if (node.left != null) queue.push(node.left);
+		if (node.right != null) queue.push(node.right);
+
+		// If a callback is given
+		if (callback != undefined) {
+			callback(node);
+			// Base 1
+			if (queue.length === 0) return;
+			// Else, call function recursively with next node in queue
+			else return this.recurLevelOrder(callback, queue.shift(), queue);
+		} else {
+			// If no callback, push node to array
+			array.push(node);
+
+			// Base 2
+			if (queue.length === 0) return array;
+			else {
+				// Call function recursively and return the concattenated Arrays
+				return array.concat(
+					this.recurLevelOrder(callback, queue.shift(), queue),
+				);
+			}
 		}
 	};
 
@@ -290,3 +336,4 @@ console.log(tree.find(20)); // --> { value: 20, left: null, right: null }
 console.log(tree.find(10)); // --> null
 
 console.log(tree.iterLevelOrder()); // --> Array holding all values - levelOrder
+console.log(tree.recurLevelOrder()); // --> Same but recursive
