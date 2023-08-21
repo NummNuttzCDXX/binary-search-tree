@@ -169,6 +169,45 @@ class Tree {
 	};
 
 	/**
+	 * Traverse the tree in 'level order' and place the current `Node`
+	 * as a parameter to the given callback function.
+	 * If no callback is given, return an Array of values
+	 *
+	 * @param {Function} callback - A callback function whos parameter
+	 * will be each node in the tree
+	 *
+	 * @return {void | Array} Nothing | An `Array` of values
+	 */
+	iterLevelOrder = (callback) => {
+		const queue = [];
+		const array = []; // Array of values to be returned if no callback is given
+		let node = this.root;
+
+		while (true) {
+			// Push children to queue
+			if (node.left != null) queue.push(node.left);
+			if (node.right != null) queue.push(node.right);
+
+			// If a callback is given
+			if (callback != undefined) {
+				callback(node);
+			} else {
+				array.push(node);
+			}
+
+			// If nothing is in the queue and current Node has no children,
+			// Break loop
+			if (queue.length === 0 && node.left === null && node.right === null) {
+				if (callback == undefined) return array;
+				break;
+			}
+
+			// Set node to first Node in the queue
+			node = queue.shift();
+		}
+	};
+
+	/**
 	 * Pretty Print the BTS to the console
 	 * for visualization
 	 * @author TOP
@@ -249,3 +288,5 @@ tree.prettyPrint();
 
 console.log(tree.find(20)); // --> { value: 20, left: null, right: null }
 console.log(tree.find(10)); // --> null
+
+console.log(tree.iterLevelOrder()); // --> Array holding all values - levelOrder
