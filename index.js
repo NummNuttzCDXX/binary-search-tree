@@ -342,6 +342,33 @@ class Tree {
 	};
 
 	/**
+	 * Get the height of the given `Node`
+	 * - Height: Number of edges, in longest path, from the `Node`
+	 * to a leaf node (one without children)
+	 *
+	 * @param {number | Node} node Node to get the height of
+	 * @param {number} [height] Current height
+	 * - Used for recursion
+	 *
+	 * @return {number}
+	 */
+	height = (node, height = 1) => {
+		if (typeof node == 'number') node = this.find(node);
+
+		if (node === null) {
+			return 0; // Height of an empty node is 0
+		}
+
+		const leftHeight = this.height(node.left, height + 1);
+		const rightHeight = this.height(node.right, height + 1);
+
+		// Return the maximum of leftHeight and rightHeight,
+		// plus 1 for the current node
+		return Math.max(leftHeight, rightHeight) + 1;
+	};
+
+
+	/**
 	 * Pretty Print the BTS to the console
 	 * for visualization
 	 * @author TOP
@@ -428,6 +455,8 @@ console.log(tree.recurLevelOrder()); // --> Same but recursive
 
 console.log(tree.inorder((node) => node.value = node.value - 1));
 // -> [ 0,  1,  2,  3,  4,  5,  6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-tree.preorder((node) => node.value = node.value - 1);
+tree.preorder((node) => node.value = node.value + 2);
 tree.postorder((node) => node.value = node.value - 1);
 console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
+
+console.log('Height:', tree.height(5));
