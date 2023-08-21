@@ -254,6 +254,29 @@ class Tree {
 	};
 
 	/**
+	 * Traverse the Tree, depth first, In Order
+	 * - The `Node`'s will be passed into the callback
+	 * @param {Function} callback - Callback function to which the parameter
+	 * will be every Node in order
+	 * @param {Node} node - Current Node
+	 * - Used for recursion, do not worry about this
+	 * @return {void}
+	 */
+	inOrder = (callback, node = this.root) => {
+		// Base case
+		if (node == null) return;
+
+		// First go to left
+		this.inOrder(callback, node.left);
+
+		// Next, run callback on root
+		callback(node);
+
+		// Then, go to right
+		this.inOrder(callback, node.right);
+	};
+
+	/**
 	 * Pretty Print the BTS to the console
 	 * for visualization
 	 * @author TOP
@@ -337,3 +360,6 @@ console.log(tree.find(10)); // --> null
 
 console.log(tree.iterLevelOrder()); // --> Array holding all values - levelOrder
 console.log(tree.recurLevelOrder()); // --> Same but recursive
+
+tree.inOrder((node) => node.value = node.value - 1);
+console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
