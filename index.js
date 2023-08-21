@@ -156,7 +156,7 @@ class Tree {
 	 *
 	 * @param {number | any} value - Value to find
 	 *
-	 * @return {Node} Node with the given value
+	 * @return {Node | null} Node with the given value - `null` if not found
 	 */
 	find = (value) => {
 		let node = this.root;
@@ -261,20 +261,25 @@ class Tree {
 	 * will be every Node in order
 	 * @param {Node} node - Current Node
 	 * - Used for recursion, do not worry about this
-	 * @return {void}
+	 * @param {Array} [arr] An array of values
+	 * - Used for recursion
+	 * @return {Array} An array of whatever `callback` returns when
+	 * `node` is passed into it
 	 */
-	inorder = (callback, node = this.root) => {
+	inorder = (callback, node = this.root, arr = []) => {
 		// Base case
 		if (node == null) return;
 
 		// First, go to left
-		this.inorder(callback, node.left);
+		this.inorder(callback, node.left, arr);
 
 		// Next, run callback on root
-		callback(node);
+		arr.push(callback(node));
 
 		// Then, go to right
-		this.inorder(callback, node.right);
+		this.inorder(callback, node.right, arr);
+
+		return arr;
 	};
 
 	/**
@@ -285,20 +290,25 @@ class Tree {
 	 * - The parameter for `callback` will be the `Node`
 	 * @param {Node} node - The current node
 	 * - Used for recursion, do not worry about this
+	 * @param {Array} [arr] An array of values
+	 * - Used for recursion
 	 *
-	 * @return {void}
+	 * @return {Array} An array of whatever `callback` returns when
+	 * `node` is passed into it
 	 */
-	preorder = (callback, node = this.root) => {
+	preorder = (callback, node = this.root, arr = []) => {
 		if (node == null) return;
 
 		// First, run callback on root
-		callback(node);
+		arr.push(callback(node));
 
 		// Next, go to left
-		this.preorder(callback, node.left);
+		this.preorder(callback, node.left, arr);
 
 		// Then, go to right
-		this.preorder(callback, node.right);
+		this.preorder(callback, node.right, arr);
+
+		return arr;
 	};
 
 	/**
@@ -309,21 +319,26 @@ class Tree {
 	 * - The parameter for `callback` will be the `Node`
 	 * @param {Node} node - The current node
 	 * - Used for recursion, do not worry about this
+	 * @param {Array} [arr] An array of values
+	 * - Used for recursion
 	 *
-	 * @return {void}
+	 * @return {Array} An array of whatever `callback` returns when
+	 * `node` is passed into it
 	 */
-	postorder = (callback, node = this.root) => {
+	postorder = (callback, node = this.root, arr = []) => {
 		// Base Case
 		if (node == null) return;
 
 		// First, go to left
-		this.postorder(callback, node.left);
+		this.postorder(callback, node.left, arr);
 
 		// Next, go to right
-		this.postorder(callback, node.right);
+		this.postorder(callback, node.right, arr);
 
 		// Then, run callback on root
-		callback(node);
+		arr.push(callback(node));
+
+		return arr;
 	};
 
 	/**
@@ -411,7 +426,8 @@ console.log(tree.find(10)); // --> null
 console.log(tree.iterLevelOrder()); // --> Array holding all values - levelOrder
 console.log(tree.recurLevelOrder()); // --> Same but recursive
 
-tree.inorder((node) => node.value = node.value - 1);
+console.log(tree.inorder((node) => node.value = node.value - 1));
+// -> [ 0,  1,  2,  3,  4,  5,  6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 tree.preorder((node) => node.value = node.value - 1);
 tree.postorder((node) => node.value = node.value - 1);
 console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
