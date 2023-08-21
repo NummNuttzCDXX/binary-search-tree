@@ -255,6 +255,7 @@ class Tree {
 
 	/**
 	 * Traverse the Tree, depth first, In Order
+	 * - Left, root, right
 	 * - The `Node`'s will be passed into the callback
 	 * @param {Function} callback - Callback function to which the parameter
 	 * will be every Node in order
@@ -262,11 +263,11 @@ class Tree {
 	 * - Used for recursion, do not worry about this
 	 * @return {void}
 	 */
-	inOrder = (callback, node = this.root) => {
+	inorder = (callback, node = this.root) => {
 		// Base case
 		if (node == null) return;
 
-		// First go to left
+		// First, go to left
 		this.inOrder(callback, node.left);
 
 		// Next, run callback on root
@@ -274,6 +275,30 @@ class Tree {
 
 		// Then, go to right
 		this.inOrder(callback, node.right);
+	};
+
+	/**
+	 * Traverse the Tree, depth first, preorder
+	 * - Root, left, right
+	 *
+	 * @param {Function} callback - Callback function to be called with every node
+	 * - The parameter for `callback` will be the `Node`
+	 * @param {Node} node - The current node
+	 * - Used for recursion, do not worry about this
+	 *
+	 * @return {void}
+	 */
+	preorder = (callback, node = this.root) => {
+		if (node == null) return;
+
+		// First, run callback on root
+		callback(node);
+
+		// Next, go to left
+		this.preorder(callback, node.left);
+
+		// Then, go to right
+		this.preorder(callback, node.right);
 	};
 
 	/**
@@ -361,5 +386,6 @@ console.log(tree.find(10)); // --> null
 console.log(tree.iterLevelOrder()); // --> Array holding all values - levelOrder
 console.log(tree.recurLevelOrder()); // --> Same but recursive
 
-tree.inOrder((node) => node.value = node.value - 1);
+tree.inorder((node) => node.value = node.value - 1);
+tree.preorder((node) => node.value = node.value - 1);
 console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
