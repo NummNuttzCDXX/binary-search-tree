@@ -274,7 +274,8 @@ class Tree {
 		this.inorder(callback, node.left, arr);
 
 		// Next, run callback on root
-		arr.push(callback(node));
+		if (callback !== undefined) arr.push(callback(node));
+		else arr.push(node.value);
 
 		// Then, go to right
 		this.inorder(callback, node.right, arr);
@@ -300,7 +301,8 @@ class Tree {
 		if (node == null) return;
 
 		// First, run callback on root
-		arr.push(callback(node));
+		if (callback != undefined) arr.push(callback(node));
+		else arr.push(node.value);
 
 		// Next, go to left
 		this.preorder(callback, node.left, arr);
@@ -336,7 +338,8 @@ class Tree {
 		this.postorder(callback, node.right, arr);
 
 		// Then, run callback on root
-		arr.push(callback(node));
+		if (callback != undefined) arr.push(callback(node));
+		else arr.push(node.value);
 
 		return arr;
 	};
@@ -398,6 +401,33 @@ class Tree {
 	};
 
 	/**
+	 * Check if tree is balanced
+	 * - A balanced tree is one where the difference between
+	 * heights of left subtree and right subtree of every node is not more than 1
+	 *
+	 * @param {Node} node Root of tree
+	 *
+	 * @return {boolean}
+	 */
+	isBalanced = (node = this.root) => {
+		if (node === null) return true;
+
+		// Calc height of left and right subtrees
+		const left = this.height(node.left);
+		const right = this.height(node.right);
+
+		// Check if current nodes subtree is balanced
+		if (Math.abs(left - right) > 1) return false;
+
+		// Recursively check balance for left and right sub-subtrees
+		return this.isBalanced(node.left) && this.isBalanced(node.right);
+	};
+
+	rebalance = () => {
+		this.root = buildTree(this.inorder());
+	};
+
+	/**
 	 * Pretty Print the BTS to the console
 	 * for visualization
 	 * @author TOP
@@ -433,7 +463,7 @@ class Tree {
  *
  * @return {Node} `Node` Object
  */
-const buildTree = (arr, start = 0, end = arr.length) => {
+const buildTree = (arr, start = 0, end = arr.length - 1) => {
 	// Base Case
 	if (start > end) return null;
 
@@ -474,7 +504,6 @@ const sorted = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 
 const tree = new Tree(sorted);
 tree.delete(10);
-tree.prettyPrint();
 
 console.log(tree.find(20)); // --> { value: 20, left: null, right: null }
 console.log(tree.find(10)); // --> null
@@ -488,5 +517,11 @@ tree.preorder((node) => node.value = node.value + 2);
 tree.postorder((node) => node.value = node.value - 1);
 console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
 
-console.log('Height:', tree.height(5));
-console.log('Depth: ', tree.depth(3));
+console.log('Height:', tree.height(5)); // --> 4
+console.log('Depth: ', tree.depth(3)); // --> 3
+
+console.log(tree.isBalanced()); // --> false (deleting '10' unbalanced tree)
+tree.prettyPrint();
+tree.rebalance();
+console.log(tree.isBalanced()); // --> true
+tree.prettyPrint();
