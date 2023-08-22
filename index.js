@@ -367,6 +367,35 @@ class Tree {
 		return Math.max(leftHeight, rightHeight) + 1;
 	};
 
+	/**
+	 * Get the depth of the given `Node`
+	 * - Depth: Number of edges from a given `Node` and its root node
+	 *
+	 * @param {Node | number} node Node to find depth of
+	 * - Can be the value of node or the actual Node
+	 *
+	 * @return {number | null}
+	 */
+	depth = (node) => {
+		// Change number into node
+		if (typeof node == 'number') node = this.find(node);
+		// If no Node exists, return null
+		if (node == null) return null;
+
+		let current = this.root;
+		let depth = 0;
+		while (true) {
+			// If no node, return `null`
+			if (current == null) return null;
+			// Move down the tree if node is lower
+			if (current.value > node.value) current = current.left;
+			// Move up the tree if node is greater
+			else if (current.value < node.value) current = current.right;
+			// Return depth if node is found
+			else if (current.value == node.value) return depth;
+			depth++; // increment depth with each loop
+		}
+	};
 
 	/**
 	 * Pretty Print the BTS to the console
@@ -460,3 +489,4 @@ tree.postorder((node) => node.value = node.value - 1);
 console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
 
 console.log('Height:', tree.height(5));
+console.log('Depth: ', tree.depth(3));
