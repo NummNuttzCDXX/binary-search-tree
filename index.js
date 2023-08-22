@@ -497,31 +497,47 @@ class Node {
 	}
 }
 
+const script = () => {
+	// Get array of 20 random numbers < 100
+	const arr = [];
+	for (let i = 0; i < 20; i++) {
+		arr.push(Math.floor(Math.random() * 99));
+	}
 
-// Tests
-const sorted = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20];
+	arr.sort();
 
-const tree = new Tree(sorted);
-tree.delete(10);
+	// Create Tree
+	const tree = new Tree(arr);
 
-console.log(tree.find(20)); // --> { value: 20, left: null, right: null }
-console.log(tree.find(10)); // --> null
+	tree.prettyPrint();
 
-console.log(tree.iterLevelOrder()); // --> Array holding all values - levelOrder
-console.log(tree.recurLevelOrder()); // --> Same but recursive
+	// Confirm tree is balanced
+	console.log('Is balanced: ', tree.isBalanced());
 
-console.log(tree.inorder((node) => node.value = node.value - 1));
-// -> [ 0,  1,  2,  3,  4,  5,  6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-tree.preorder((node) => node.value = node.value + 2);
-tree.postorder((node) => node.value = node.value - 1);
-console.log(tree.iterLevelOrder()); // ^^ --> Subtracted one from every node
+	// Print out all elements
+	console.log('Level Order: ', tree.iterLevelOrder());
+	console.log('Preorder: ', tree.preorder());
+	console.log('Postorder: ', tree.postorder());
+	console.log('Inorder: ', tree.inorder());
 
-console.log('Height:', tree.height(5)); // --> 4
-console.log('Depth: ', tree.depth(3)); // --> 3
+	// Unbalance tree by adding numbers > 100
+	for (let i = 0; i < 5; i++) {
+		tree.insert(Math.floor((Math.random() * 10) + 100));
+	}
 
-console.log(tree.isBalanced()); // --> false (deleting '10' unbalanced tree)
-tree.prettyPrint();
-tree.rebalance();
-console.log(tree.isBalanced()); // --> true
-tree.prettyPrint();
+	// Confirm tree is unbalanced
+	console.log('Is balanced: ', tree.isBalanced());
+	// Rebalance
+	console.log('Rebalanced');
+	tree.rebalance();
+	// Confirm rebalanced
+	console.log('Is balanced: ', tree.isBalanced());
+
+	// Print out all elements
+	console.log('Level Order: ', tree.iterLevelOrder());
+	console.log('Preorder: ', tree.preorder());
+	console.log('Postorder: ', tree.postorder());
+	console.log('Inorder: ', tree.inorder());
+};
+
+script();
